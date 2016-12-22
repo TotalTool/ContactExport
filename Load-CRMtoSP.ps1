@@ -1,11 +1,4 @@
-﻿#——————————————————————– 
-# Name: Load CSV into SharePoint List 
-# NOTE: No warranty is expressed or implied by this code – use it at your 
-# own risk. If it doesn’t work or breaks anything you are on your own 
-#——————————————————————–
-
-
-# Setup the correct modules for SharePoint Manipulation 
+﻿# Setup the correct modules for SharePoint Manipulation 
 if ( (Get-PSSnapin -Name Microsoft.SharePoint.PowerShell -ErrorAction SilentlyContinue) -eq $null ) 
 { 
    Add-PsSnapin Microsoft.SharePoint.PowerShell 
@@ -14,13 +7,13 @@ $host.Runspace.ThreadOptions = "ReuseThread"
 
 
 #Open SharePoint List 
-$SPServer="http://sharepoint.totaltool.int/itv2"
-$SPAppList="/Lists/Test CSV Upload" 
+$SPServer="http://sharepoint.totaltool.int/sales"
+$SPAppList="/Lists/Contacts" 
 $spWeb = Get-SPWeb $SPServer 
 $spData = $spWeb.GetList($spWeb.ServerRelativeURL + $SPAppList)
 
 
-$InvFile="ContactUpload.csv" 
+$InvFile="C:\Scripts\1ContactUpload.csv" 
 # Get Data from Inventory CSV File 
 $FileExists = (Test-Path $InvFile -PathType Leaf) 
 if ($FileExists) { 
@@ -37,9 +30,9 @@ if ($FileExists) {
 
 foreach ($row in $tblData) 
 { 
-   "Adding entry for "+$row."First Name".ToString() 
+   "Adding entry for "+$row."GivenName".ToString() 
    $spItem = $spData.AddItem()
-   $spItem["Company Name"] = $row."ComapnayName".ToString() 
+   $spItem["Company Name"] = $row."CompanyName".ToString() 
    $spItem["First Name"] = $row."GivenName".ToString() 
    $spItem["Last Name"] = $row."Surname".ToString() 
    $spItem["Email Address"] = $row."Email1EmailAddress".ToString() 
