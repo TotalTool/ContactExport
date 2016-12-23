@@ -81,7 +81,7 @@ do{
     $ivItemView.Offset += $fiItems.Items.Count
 }while($fiItems.MoreAvailable -eq $true) 
 
-$FileName = "C:\OutlookCRMFiles\RawExports\" + $EmailAccount + "-ContactsExportnew.csv" 
+$FileName = "C:\OutlookCRMFiles\Exports\" + $EmailAccount + ".csv" 
 $ExportCollection | Export-Csv -NoTypeInformation -Path $FileName 
 "Exported to " + $FileName
 }

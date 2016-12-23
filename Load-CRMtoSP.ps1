@@ -12,38 +12,37 @@ $SPAppList="/Lists/Contacts"
 $spWeb = Get-SPWeb $SPServer 
 $spData = $spWeb.GetList($spWeb.ServerRelativeURL + $SPAppList)
 
+#Delete all info from last upload
+$items = $spData.Items
+$count = $items.Count
+for($int = $count-1;$int -ge 0; $int--){
+    "Deleting record: " + $int
+    $items.Delete($int);
+    }
 
-$InvFile="C:\Scripts\1ContactUpload.csv" 
-# Get Data from Inventory CSV File 
-$FileExists = (Test-Path $InvFile -PathType Leaf) 
-if ($FileExists) { 
-   "Loading $InvFile for processing…" 
-   $tblData = Import-CSV $InvFile 
-} else { 
-   "$InvFile not found – stopping import!" 
-   exit 
-}
+Get-ChildItem "S:\ContactExports" | ForEach-Object {
+    $tblData = Import-CSV $_.FullName 
+    # Loop through Applications add each one to SharePoint
 
-# Loop through Applications add each one to SharePoint
+    "Uploading data to SharePoint…."
 
-"Uploading data to SharePoint…."
-
-foreach ($row in $tblData) 
-{ 
-   "Adding entry for "+$row."GivenName".ToString() 
-   $spItem = $spData.AddItem()
-   $spItem["Company Name"] = $row."CompanyName".ToString() 
-   $spItem["First Name"] = $row."GivenName".ToString() 
-   $spItem["Last Name"] = $row."Surname".ToString() 
-   $spItem["Email Address"] = $row."Email1EmailAddress".ToString() 
-   $spItem["Business Phone"] = $row."BusinessPhone".ToString() 
-   $spItem["Mobile Phone"] = $row."MobilePhone".ToString()
-   $spItem["Categories"] = $row."Categories".ToString()
-   $spItem["Street Address"] = $row."BusinessStreet".ToString()
-   $spItem["City"] = $row."BusinessCity".ToString()
-   $spItem["State"] = $row."BusinessState".ToString()
-   $spItem["Zip"] = $row."BusinessPostalCode".ToString()
-   $spItem.Update() 
+    foreach ($row in $tblData) 
+    { 
+        "Adding entry for "+$row."GivenName".ToString() 
+        $spItem = $spData.AddItem()
+        $spItem["Company Name"] = $row."CompanyName".ToString() 
+        $spItem["First Name"] = $row."GivenName".ToString() 
+        $spItem["Last Name"] = $row."Surname".ToString() 
+        $spItem["Email Address"] = $row."Email1EmailAddress".ToString() 
+        $spItem["Business Phone"] = $row."BusinessPhone".ToString() 
+        $spItem["Mobile Phone"] = $row."MobilePhone".ToString()
+        $spItem["Categories"] = $row."Categories".ToString()
+        $spItem["Street Address"] = $row."BusinessStreet".ToString()
+        $spItem["City"] = $row."BusinessCity".ToString()
+        $spItem["State"] = $row."BusinessState".ToString()
+        $spItem["Zip"] = $row."BusinessPostalCode".ToString()
+        $spItem.Update() 
+    }
 }
 
 "—————" 
