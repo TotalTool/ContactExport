@@ -81,7 +81,7 @@ do{
     $ivItemView.Offset += $fiItems.Items.Count
 }while($fiItems.MoreAvailable -eq $true) 
 
-$FileName = "S:ContactExports\" + $EmailAccount + ".csv" 
+$FileName = "S:\ContactExports\" + $EmailAccount + ".csv" 
 $ExportCollection | Export-Csv -NoTypeInformation -Path $FileName 
 "Exported to " + $FileName
 }
@@ -93,8 +93,8 @@ Param(
     )
 $file = import-csv $filePath
 $expandfile = @()
-foreach($row in $file){
-    if($row.Categories -ne "Personal"){
+foreach($row in $file){ 
+    if(($row.Categories -ne "Personal") -and ($row.companyname -notmatch "Total Tool*")){
         $tempfile = "" | select CompanyName,givenname,surname,Email1EmailAddress,businessphone,mobilephone,Categories,businessstreet,businesscity,businessstate,businesspostalcode
         $tempfile.'companyname' = $row.companyname
         $tempfile.'givenname' = $row.givenname
@@ -127,7 +127,7 @@ $EmailAccounts = Import-Csv "C:\Scripts\Contacts Export\SalesReps.csv"
 foreach($EmailAccount in $EmailAccounts){
     Get-EWSContacts -EmailAccount $EmailAccount.email -creds $mailcred
 }
-Get-ChildItem "S:\Contact For Exports" | 
+Get-ChildItem "S:\ContactExports" | 
 Foreach-Object {
     Split-Categories -filePath $_.FullName
 }
