@@ -12,6 +12,7 @@ $SPAppList="/Lists/Contacts"
 $spWeb = Get-SPWeb $SPServer 
 $spData = $spWeb.GetList($spWeb.ServerRelativeURL + $SPAppList)
 
+#Delete old items in list to allow upload of new items
 $items = $spData.Items
 $count = $items.Count
 for($int = $count-1;$int -ge 0; $int--){
@@ -19,8 +20,10 @@ for($int = $count-1;$int -ge 0; $int--){
     $items.Delete($int);
     }
 
+#Pull in csv files
 Get-ChildItem "S:\ContactExports" | ForEach-Object {
     $tblData = Import-CSV $_.FullName 
+    #Get user name
     $user = $_.Name -replace '@totaltool.com.csv',''
     # Loop through Applications add each one to SharePoint
 
