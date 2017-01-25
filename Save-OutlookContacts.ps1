@@ -94,7 +94,7 @@ Param(
 $file = import-csv $filePath
 $expandfile = @()
 foreach($row in $file){ 
-    if((!($row.Categories.contains("Personal"))) -and ($row.companyname -notmatch "Total Tool*")){
+    if((!($row.Categories -match "Personal")) -and ($row.companyname -notmatch "Total Tool*")){
         $tempfile = "" | select CompanyName,givenname,surname,Email1EmailAddress,businessphone,mobilephone,Categories,businessstreet,businesscity,businessstate,businesspostalcode
         $tempfile.'companyname' = $row.companyname
         $tempfile.'givenname' = $row.givenname
